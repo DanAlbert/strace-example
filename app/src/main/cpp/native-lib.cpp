@@ -1,17 +1,22 @@
-#include <jni.h>
+#include <stdio.h>
+#include <pthread.h>
+
 #include <string>
 
-#include <mutex>
+#include <android/log.h>
+#include <jni.h>
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_android_samples_strace_MainActivity_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
-    std::mutex mutex;
     // Intentionally cause a deadlock so the strace output will show something
     // interesting to debug.
-    std::lock_guard<std::mutex> lock1(mutex);
-    std::lock_guard<std::mutex> lock2(mutex);
+    __android_log_print(ANDROID_LOG_ERROR, "strace-example", "Attempting deadlock");
+    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&mutex);
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }

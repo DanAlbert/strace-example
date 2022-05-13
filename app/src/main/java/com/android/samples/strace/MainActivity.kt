@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         // Used to load the 'strace' library on application startup.
         init {
-            System.loadLibrary("strace")
+            System.loadLibrary("app")
         }
     }
 }
